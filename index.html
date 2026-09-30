@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vineria della Bovisa – Il gioco dei brindisi</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Caveat+Brush&display=swap" rel="stylesheet">
+<style>
+:root{--muro:#C4271C;--giallo:#F2B84B;--legno:#4B2C1B;--legno2:#7A4A2B;--lavagna:#1E2822;--gesso:#F1EBDD;--nero:#14110F;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;color:var(--gesso);font:400 15px/1.45 Archivo,system-ui,sans-serif;-webkit-user-select:none;user-select:none;overflow-x:hidden;
+background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse at 30% 15%,#DB382C,#B71F16 55%,#86140e)}
+.lamp{position:fixed;top:0;z-index:0;pointer-events:none;transform-origin:50% 0;animation:sway 7s ease-in-out infinite alternate}
+.lamp i{display:block;width:1px;height:var(--h);margin:0 auto;background:var(--nero)}
+.lamp b{display:block;width:var(--w);height:calc(var(--w)*1.7);border-radius:50% 50% 46% 46%/38% 38% 62% 62%;background:linear-gradient(#fffbe6,#ffe18c);box-shadow:0 0 50px 24px rgba(255,205,100,.5)}
+@keyframes sway{from{transform:rotate(-1.6deg)}to{transform:rotate(1.6deg)}}
+@media (prefers-reduced-motion:reduce){.lamp,.label{animation:none}}
+.hud{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:8px;height:44px;margin:8px auto 4px;padding:0 14px;width:calc(100vw - 24px);max-width:520px;background:var(--lavagna);border:3px solid var(--legno2);box-shadow:0 0 0 2px var(--nero),0 6px 16px rgba(0,0,0,.4)}
+.hud h1{margin:0;font:400 25px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--gesso);text-align:center;letter-spacing:.02em}
+.hud span{min-width:70px;font:400 20px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--giallo);font-variant-numeric:tabular-nums}.hud span:last-child{text-align:right}.hud span:first-child{text-align:left}
+.stage{position:relative;z-index:1;margin:8px auto 0;aspect-ratio:9/14;height:min(calc(100dvh - 86px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)),calc((100vw - 28px) * 1.5556));max-width:calc(100vw - 28px);background:var(--lavagna);box-shadow:0 0 0 7px var(--legno2),0 0 0 9px var(--nero),inset 0 0 0 2px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.6);overflow:hidden}
+canvas#c{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,17,15,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:10px;overflow:auto}
+.ov[hidden]{display:none}
+.label{background:var(--lavagna);border:6px solid var(--legno2);box-shadow:0 0 0 2px var(--nero),inset 0 0 0 2px rgba(241,235,221,.22),0 10px 30px rgba(0,0,0,.6);padding:18px 16px;text-align:center;width:min(300px,92%);margin:8px 0;animation:in .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes in{from{transform:translateY(24px) scale(.94);opacity:0}}
+.label h2{margin:0 0 2px;font:400 44px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--gesso)}
+.label p{margin:8px 0}.muted{opacity:.7;font-size:13px}
+.lg-row{display:flex;justify-content:center;gap:6px;margin:12px 0}
+.lg-row figure{margin:0;font-size:11px}.lg-row canvas{display:block;width:40px;height:40px}
+h3{font:400 22px "Caveat Brush","Comic Sans MS",cursive;margin:14px 0 0;color:var(--giallo)}
+button{font:600 16px Archivo,system-ui,sans-serif;background:var(--muro);color:var(--gesso);border:2px solid var(--gesso);border-radius:2px;padding:11px 22px;cursor:pointer;margin-top:8px;transition:transform .12s,filter .12s}
+button:hover{filter:brightness(1.12)}button:active{transform:scale(.96)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
+input{font:400 30px "Caveat Brush","Comic Sans MS",cursive;width:110px;text-align:center;letter-spacing:.2em;background:transparent;color:var(--gesso);border:2px dashed rgba(241,235,221,.6);border-radius:2px;padding:4px;text-transform:uppercase}
+ol{list-style:none;margin:8px auto;padding:0;max-width:210px;text-align:left}
+ol li{display:flex;justify-content:space-between;border-bottom:1px dotted rgba(241,235,221,.45);padding:3px 0}
+.big{font:400 64px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--giallo);margin:4px 0}
+.proof{border:2px dashed var(--giallo);padding:10px;margin:10px 0}
+.snd{position:absolute;top:8px;right:8px;z-index:3;display:flex;gap:6px}
+.snd button{width:38px;height:38px;padding:0;margin:0;border-radius:50%;background:rgba(20,17,15,.6);border:1.5px solid rgba(241,235,221,.6);color:var(--gesso);display:grid;place-items:center;position:relative}
+.snd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.snd button[aria-pressed=false]{opacity:.55}
+.snd button[aria-pressed=false]::after{content:"";position:absolute;width:26px;height:2px;background:var(--gesso);transform:rotate(-45deg)}
+</style>
+</head>
+<body>
+<div class="lamp" style="left:5%;--h:38px;--w:30px"><i></i><b></b></div>
+<div class="lamp" style="left:calc(50% - 22px);--h:14px;--w:44px;animation-delay:-3s"><i></i><b></b></div>
+<div class="lamp" style="right:6%;--h:60px;--w:34px;animation-delay:-5s"><i></i><b></b></div>
+<header class="hud"><span id="lv">Livello 1</span><h1>Vineria della Bovisa</h1><span id="sc">0 punti</span></header>
+<div class="stage"><canvas id="c"></canvas><div class="ov" id="ov"></div>
+<div class="snd"><button id="bm" aria-pressed="true" aria-label="Musica"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button><button id="bf" aria-pressed="true" aria-label="Effetti sonori"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button></div></div>
+<script>
+// Cantina — suono. Tutto generato qui dentro: nessun file, nessuna libreria.
+// Due cose: gli effetti (tappo, colpo, vetro, cascata) e una musica di fondo
+// blues: dodici battute in la minore, basso che cammina, ride, spazzole, un
+// paio di accordi e il tema ogni tanto. Una cosa sola che suoni, ma suonata.
+//
+// I browser non fanno suonare niente senza un gesto dell'utente: per questo
+// l'audio si apre al primo tocco e ogni funzione è sicura anche se è muto,
+// se non c'è Web Audio, o se la partita è già finita.
+window.A = (function () {
+
+let ctx = null;
+let padroni = null;       // { musica, effetti }: due manopole indipendenti
+let busMusica = null, busEffetti = null, riverbero = null;
+let rumore = null;        // un solo buffer di rumore bianco, riusato ovunque
+let volBase = 0.9;
+
+let musica = null;        // stato dello spartito
+let timer = null;
+let passo = 0;            // indice del passo battevole
+let prossimo = 0;         // quando suona il prossimo passo
+let partita = false;      // il gioco ha chiesto la musica
+
+/* ---------- impianto ---------- */
+function apre() {
+  if (ctx) {
+    if (ctx.state === 'suspended') ctx.resume();
+    return true;
+  }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return false;                     // browser vecchio: si gioca in silenzio
+  try { ctx = new AC(); } catch (e) { return false; }
+
+  padroni = ctx.createGain();
+  padroni.gain.value = volBase;
+  padroni.connect(ctx.destination);
+
+  // Riverbero: una cantina è di pietra, e la pietza tira. Un impulso di
+  // rumore che cala lentamente fa più o meno quello, e costa niente.
+  riverbero = ctx.createConvolver();
+  riverbero.buffer = impulso(1.9, 3.2);
+  const mando = ctx.createGain();
+  mando.gain.value = 0.34;
+  riverbero.connect(mando);
+  mando.connect(padroni);
+
+  busMusica = ctx.createGain();
+  busMusica.gain.value = 0.5;
+  busMusica.connect(padroni);
+  busMusica.connect(riverbero);
+
+  busEffetti = ctx.createGain();
+  busEffetti.gain.value = 0.85;
+  busEffetti.connect(padroni);
+  busEffetti.connect(riverbero);
+
+  rumore = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+  const d = rumore.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return true;
+}
+
+// Un impulso di riverbero: rumore che si spegne. Meno si placa, più la sala
+// suona grande e vuota.
+function impulso(secondi, quanto) {
+  const n = Math.floor(ctx.sampleRate * secondi);
+  const b = ctx.createBuffer(2, n, ctx.sampleRate);
+  for (let canale = 0; canale < 2; canale++) {
+    const d = b.getChannelData(canale);
+    for (let i = 0; i < n; i++) {
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, quanto);
+    }
+  }
+  return b;
+}
+
+/* ---------- mattoni del suono ---------- */
+// Ogni suono è un involucro con la sua forma: attacco e caduta. Va sempre
+// su un bus: sennò gli effetti finirebbero in testa alla musica.
+function inv(now, picco, attacco, caduta, bus) {
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.0002, picco), now + attacco);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + attacco + caduta);
+  g.connect(bus || busEffetti);
+  return g;
+}
+function tono(tipo, freq, quando, dur, picco, detune, bus) {
+  const o = ctx.createOscillator();
+  o.type = tipo;
+  o.frequency.setValueAtTime(freq, quando);
+  if (detune) o.detune.setValueAtTime(detune, quando);
+  o.connect(inv(quando, picco, 0.006, dur, bus));
+  o.start(quando);
+  o.stop(quando + dur + 0.06);
+  return o;
+}
+// Un soffio di rumore filtrato: serve per il versare, per lo scorrere e per
+// il rumore di una sala che si stringe.
+function soffio(quando, dur, picco, da, a, tipo, bus) {
+  const s = ctx.createBufferSource();
+  s.buffer = rumore;
+  s.loop = true;
+  const f = ctx.createBiquadFilter();
+  f.type = tipo || 'bandpass';
+  f.Q.value = 1.1;
+  f.frequency.setValueAtTime(da, quando);
+  f.frequency.exponentialRampToValueAtTime(Math.max(60, a), quando + dur);
+  s.connect(f);
+  f.connect(inv(quando, picco, dur * 0.22, dur * 0.78, bus));
+  s.start(quando);
+  s.stop(quando + dur + 0.08);
+  return f;
+}
+const adesso = () => ctx.currentTime + 0.005;
+
+/* ---------- effetti ---------- */
+// Ogni effetto è una scena: più oscillatori, più soffi, con tempi diversi.
+// Il tappo che salta è un colpo secco; il vetro è un suono acuto e breve; la
+// cascata scende di tono perché le gocce cadono.
+const EFFETTI = {
+  // Il tappo che salta dalla bottiglia: due colpi secchi, poi l'aria.
+  tappo() {
+    const t = adesso();
+    soffio(t, 0.09, 0.5, 2600, 500, 'lowpass');
+    soffio(t + 0.02, 0.05, 0.28, 5200, 2200);
+    tono('sine', 180, t, 0.07, 0.32);
+  },
+  // Il colpo che parte: il vino che scivola lungo il vetro.
+  tiro() {
+    const t = adesso();
+    soffio(t, 0.14, 0.2, 1900, 620, 'bandpass');
+    tono('sine', 320, t, 0.06, 0.1);
+  },
+  // La goccia che tocca le altre: un dito sul vetro.
+  tocco() {
+    const t = adesso();
+    tono('triangle', 760, t, 0.07, 0.16, 4);
+    tono('sine', 1520, t, 0.04, 0.05);
+  },
+  // Tre gocce che si uniscono: bicchiere. Più alta la serie, più suona.
+  abbinamento(serie) {
+    const t = adesso();
+    const base = 700 * Math.pow(2, Math.min(6, (serie - 1)) / 7);
+    tono('sine', base, t, 0.34, 0.3);
+    tono('sine', base * 2.76, t, 0.26, 0.16, 6);
+    tono('triangle', base * 4.07, t + 0.005, 0.18, 0.07, -5);
+    tono('sine', base * 0.5, t, 0.4, 0.12);
+    soffio(t, 0.09, 0.13, 4200, 1600);
+  },
+  // Le gocce che non reggono e vengono giù: un passo che scende.
+  cascata(quante) {
+    const t = adesso();
+    const n = Math.min(7, 2 + Math.floor(quante / 3));
+    for (let i = 0; i < n; i++) {
+      const f = 560 * Math.pow(0.78, i);
+      tono('sine', f, t + i * 0.045, 0.2, 0.15 - i * 0.012);
+    }
+    soffio(t + 0.05, 0.3, 0.1, 1400, 300, 'lowpass');
+  },
+  // La sala che si stringe: un tonfo di botte e un gemito di legno.
+  discesa() {
+    const t = adesso();
+    tono('sine', 96, t, 0.34, 0.36);
+    tono('sine', 64, t, 0.4, 0.24);
+    soffio(t, 0.24, 0.16, 900, 180, 'lowpass');
+  },
+  // Una combinazione non c'è: due colpi smorzati, niente di allegro.
+  mancato() {
+    const t = adesso();
+    tono('triangle', 320, t, 0.11, 0.12);
+    tono('sine', 214, t + 0.05, 0.13, 0.1);
+  },
+  // Il colpo è andato a vuoto: un tonfo lontano, e poi silenzio.
+  vuoto() {
+    const t = adesso();
+    soffio(t, 0.2, 0.12, 700, 160, 'lowpass');
+    tono('sine', 150, t + 0.1, 0.18, 0.09);
+  },
+  // Livello completato: quattro note, come un bicchiere battuto sul tavolo.
+  vinto() {
+    const t = adesso();
+    [0, 4, 7, 12].forEach((s, i) => {
+      tono('sine', 523.25 * Math.pow(2, s / 12), t + i * 0.1, 0.6, 0.26);
+      tono('triangle', 523.25 * Math.pow(2, s / 12) * 2, t + i * 0.1, 0.3, 0.07);
+    });
+    tono('sine', 130.8, t, 1.1, 0.2);          // sotto, la botte
+  },
+  // Serata finita: un sospiro che scende.
+  perso() {
+    const t = adesso();
+    const o = ctx.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(330, t);
+    o.frequency.exponentialRampToValueAtTime(110, t + 0.85);
+    o.connect(inv(t, 0.24, 0.05, 0.9));
+    o.start(t);
+    o.stop(t + 1);
+    tono('sine', 82, t + 0.1, 0.8, 0.2);
+  },
+  // Un pulsante: un ticchettio di bicchiere.
+  ui() {
+    const t = adesso();
+    tono('triangle', 1250, t, 0.05, 0.09);
+  },
+};
+
+function suona(nome, n) {
+  if (!ctx || !padroni) return;
+  if (ctx.state === 'suspended') return;
+  if (!accesa('effetti')) return;
+  const f = EFFETTI[nome];
+  if (f) { try { f.call(EFFETTI, n); } catch (e) { /* un suono rotto non ferma la partita */ } }
+}
+/* ---------- la musica ---------- */
+// Dodici battute in la minore: la forma del blues che chiunque conosce. Ogni
+// accordo è un sette — è la settima stonata, quella che un accordo maggiore non
+// ha, a fare la differenza fra un valzer e del jazz.
+const FORMA = [
+  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
+  { basso: 146.83, toni: [293.66, 369.99, 440.00, 493.88] },   // D7
+  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
+  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
+  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
+  { basso: 146.83, toni: [293.66, 369.99, 440.00, 493.88] },   // D7
+  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
+  { basso: 164.81, toni: [329.63, 415.30, 493.88, 587.33] },   // E7, il punto in cui il tema torna
+  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
+  { basso: 146.83, toni: [293.66, 369.99, 440.00, 493.88] },   // D7
+  { basso: 164.81, toni: [329.63, 415.30, 493.88, 587.33] },   // E7
+  { basso: 164.81, toni: [329.63, 415.30, 493.88, 587.33] },   // E7, la volta che chiude
+];
+const TIPI = {
+  cantina:  { bpm: 78,  basso: 0.5, ride: 0.3, spazzole: 0.3, comping: 0.35, melodia: 0,    coda: 0.5 },
+  partita:  { bpm: 98,  basso: 0.5, ride: 0.42, spazzole: 0.4, comping: 0.5, melodia: 0.55, coda: 0.3 },
+  pericolo: { bpm: 124, basso: 0.5, ride: 0.52, spazzole: 0.5, comping: 0.5, melodia: 0.75, coda: 0 },
+};
+// La scala del blues in la, con il terzo minore e il secondo diesis insieme:
+// le due note che il jazz ci mette dentro e la musica pop non mette.
+const semitoni = (semi) => 220 * Math.pow(2, semi / 12);
+// Il tema: due frasi, una sulle battute 7-8 e il finale sulle 11-12. Note in
+// semitoni da la3, [quando, nota, quante unità].
+const FRASI = {
+  6:  [[0, 0, 2], [2, 3, 2], [4, 5, 2], [6, 7, 5]],
+  7:  [[0, 5, 2], [2, 3, 2], [4, 0, 8]],
+  10: [[0, 0, 1], [1, 3, 1], [2, 5, 1], [3, 7, 1], [4, 8, 1], [5, 7, 1], [6, 5, 5]],
+};
+// Una grana stabile per (battuta, tempo): non è un numero casuale vero, quindi
+// la musica cambia a ogni giro ma suona uguale a ogni ascolto.
+const grana = (a, b) => {
+  const x = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+function mettiMusica(tipo) {
+  if (!partita) return;
+  if (musica && musica === tipo) return;
+  musica = tipo;
+  if (!ctx) return;
+  passo = 0;
+  prossimo = ctx.currentTime + 0.08;
+  if (!timer) timer = setInterval(passa, 40);   // guarda un po' avanti, non al millisecondo
+}
+function fermaMusica() {
+  musica = null;
+  if (timer) { clearInterval(timer); timer = null; }
+}
+
+// Il cuore è qui: ogni 40 ms guarda i prossimi due passi e suona quelli che
+// toccano. Così il tempo tiene anche se il disegno rallenta.
+function passa() {
+  if (!ctx || !musica) return;
+  const cfg = TIPI[musica] || TIPI.partita;
+  const unita = 60 / cfg.bpm / 3;              // tre unità per battito: è lo swing
+  const fine = ctx.currentTime + Math.max(0.12, unita * 3);
+  while (prossimo < fine) {
+    suonaPasso(passo, prossimo, cfg, unita);
+    passo++;
+    prossimo += unita;
+  }
+}
+
+// Il basso che cammina: quattro note per battuta e l'ultima scivella dentro
+// l'accordo dopo. È la linea che dice "jazz" più di tutto il resto.
+function passoBasso(battuta, battito, accordo, prossimo) {
+  if (battito === 0) return accordo.basso;
+  if (battito === 3) {
+    const su = grana(battuta, 7) < 0.5 ? -1 : 1;     // mezzo tono sotto o sopra
+    return prossimo.basso * Math.pow(2, su / 12);
+  }
+  const scelte = [accordo.toni[1], accordo.toni[2], accordo.toni[3], accordo.toni[2] / 2];
+  return scelte[Math.floor(grana(battuta, battito) * scelte.length) % scelte.length];
+}
+
+function suonaPasso(n, quando, cfg, unita) {
+  const battuta = Math.floor(n / 12) % FORMA.length;
+  const dentro = n % 12;
+  const battito = Math.floor(dentro / 3);
+  const u = dentro % 3;
+  const accordo = FORMA[battuta];
+  const prossimo = FORMA[(battuta + 1) % FORMA.length];
+
+  // Il basso sui quattro tempi, come deve: se manca il basso non è swing.
+  if (cfg.basso > 0 && u === 0) {
+    basso(passoBasso(battuta, battito, accordo, prossimo), quando, unita * 2.6, 0.3 * cfg.basso);
+  }
+
+  // Il ride: colpo sul tempo e colpo sulla semicroma ritardata, con gli
+  // accenti sui quattro tempi forti della battuta — 1, il "&" di 2, 3, il "&"
+  // di 4. Il secondo colpo arriva al terzo del tempo, non a metà: è quello
+  // che distingue lo swing dal terzine.
+  if (cfg.ride > 0 && (u === 0 || u === 2)) {
+    const accento = (u === 0 && battito % 2 === 0) || (u === 2 && battito % 2 === 1);
+    ride(quando, (accento ? 0.1 : 0.055) * cfg.ride);
+  }
+
+  // Le spazzole: due e quattro, con il fiato dell'attimo prima.
+  if (cfg.spazzole > 0 && u === 0 && (battito === 1 || battito === 3)) {
+    soffio(quando - 0.07, 0.05, 0.02 * cfg.spazzole, 1400, 4200, 'bandpass', busMusica);
+    soffio(quando, 0.16, 0.07 * cfg.spazzole, 1900, 5200, 'bandpass', busMusica);
+  }
+
+  // Il pianoforte: due accordi corti, sul rinvio di due e di quattro, e ogni
+  // tanto uno in più, come fa chi suona e non sta a contare.
+  if (cfg.comping > 0 && u === 2 && (battito === 1 || battito === 3)) {
+    accordoPiano(accordo.toni, quando, unita * 2.2, 0.07 * cfg.comping);
+  } else if (cfg.comping > 0 && u === 0 && grana(battuta, 5) > 0.72) {
+    accordoPiano(accordo.toni, quando, unita * 1.6, 0.045 * cfg.comping);
+  }
+
+  // L'organo: il letto sotto tutto, bassissimo, e solo se non si è ristretti.
+  if (cfg.coda > 0 && u === 0 && battito === 0) {
+    organo(accordo.toni, quando, unita * 11, 0.016 * cfg.coda);
+  }
+
+  // Il tema, quando c'è. Silenzio nei correnti: il blues è anche fermarsi.
+  if (cfg.melodia > 0) {
+    const frase = FRASI[battuta];
+    if (frase) {
+      for (const [a, semi, lunga] of frase) {
+        if (a === u) corno(semitoni(semi), quando, unita * lunga * 1.7, 0.085 * cfg.melodia);
+      }
+    }
+  }
+}
+
+/* ---------- voci ---------- */
+function basso(freq, quando, dur, quanto) {
+  const o = ctx.createOscillator();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(freq, quando);
+  const lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(600, quando);
+  lp.frequency.exponentialRampToValueAtTime(220, quando + dur);
+  o.connect(lp);
+  lp.connect(inv(quando, quanto, 0.014, dur, busMusica));
+  o.start(quando);
+  o.stop(quando + dur + 0.05);
+}
+// Il ride è rumore altissimo più due parziali: senza un campione è tutto quello
+// che si può fare, e basta se è piccolo e sta in alto.
+function ride(quando, quanto) {
+  soffio(quando, 0.14, quanto, 7000, 11000, 'highpass', busMusica);
+  tono('sine', 3180, quando, 0.04, quanto * 0.5, 0, busMusica);
+  tono('sine', 4720, quando, 0.03, quanto * 0.35, 0, busMusica);
+}
+// Due corde stonate e brevi, come dita sul vetro di un bicchiere.
+function accordoPiano(toni, quando, dur, quanto) {
+  for (let i = 0; i < 3; i++) {
+    for (const det of [-7, 7]) {
+      const o = ctx.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(toni[i], quando);
+      o.detune.setValueAtTime(det, quando);
+      const lp = ctx.createBiquadFilter();
+      lp.type = 'lowpass';
+      lp.frequency.setValueAtTime(2400, quando);
+      lp.frequency.exponentialRampToValueAtTime(900, quando + dur);
+      o.connect(lp);
+      lp.connect(inv(quando, quanto * (1 - i * 0.18), 0.01, dur, busMusica));
+      o.start(quando);
+      o.stop(quando + dur + 0.06);
+    }
+  }
+}
+// L'organo: due toni lunghi con un tremolo lento, il tappeto sotto la banda.
+function organo(toni, quando, dur, quanto) {
+  for (const f of [toni[0], toni[2]]) {
+    const o = ctx.createOscillator();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(f, quando);
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 1100;
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 5.2;
+    const lfoG = ctx.createGain();
+    lfoG.gain.value = quanto * 0.35;
+    const g = inv(quando, quanto, 0.09, dur, busMusica);
+    lfo.connect(lfoG);
+    lfoG.connect(g.gain);
+    o.connect(lp);
+    lp.connect(g);
+    o.start(quando); lfo.start(quando);
+    o.stop(quando + dur + 0.1); lfo.stop(quando + dur + 0.1);
+  }
+}
+// Il corno: due seghe, una banda stretta attorno al corpo, e il vibrato che
+// arriva un attimo dopo l'attacco, come fa un fiato vero.
+function corno(freq, quando, dur, quanto) {
+  const g = inv(quando, quanto, 0.05, dur, busMusica);
+  const bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.setValueAtTime(760, quando);
+  bp.Q.value = 1.4;
+  bp.connect(g);
+  const lfo = ctx.createOscillator();
+  lfo.frequency.setValueAtTime(5.4, quando);
+  const lfoG = ctx.createGain();
+  lfoG.gain.setValueAtTime(0, quando);
+  lfoG.gain.setValueAtTime(4.5, quando + Math.min(0.22, dur * 0.4));
+  lfo.connect(lfoG);
+  for (const det of [-5, 5]) {
+    const o = ctx.createOscillator();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(freq, quando);
+    o.detune.setValueAtTime(det, quando);
+    lfoG.connect(o.detune);
+    o.connect(bp);
+    o.start(quando);
+    o.stop(quando + dur + 0.08);
+  }
+  lfo.start(quando);
+  lfo.stop(quando + dur + 0.08);
+}
+
+
+/* ---------- manopole ---------- */
+function metti(which, acceso) {
+  if (!apre()) return false;
+  const g = which === 'musica' ? busMusica : busEffetti;
+  if (!g) return false;
+  g.gain.setTargetAtTime(acceso ? (which === 'musica' ? 0.5 : 0.85) : 0, ctx.currentTime, 0.05);
+  return true;
+}
+function accesa(which) {
+  const g = which === 'musica' ? busMusica : busEffetti;
+  return !!g && g.gain.value > 0.01;
+}
+
+// Apre l'audio e lo tiene aperto: i browser lo sospendono da soli, e senza
+// un gesto dell'utente non si può fare niente. Si chiama una volta sola.
+function sveglia() {
+  if (!apre()) return;
+  if (ctx.state === 'suspended') ctx.resume();
+  if (!partita) { partita = true; passo = 0; prossimo = ctx.currentTime + 0.08; }
+  if (musica && !timer) timer = setInterval(passa, 40);
+}
+
+return {
+  sveglia, suona, metti, accesa,
+  musica: mettiMusica, silenzio: fermaMusica,
+  suoneria: Object.keys(EFFETTI),
+};
+})();
+
+</script>
+<script>
+const W=360,H=560,R=18,RH=R*1.732,COLS=10,LIM=12,SX=W/2,SY=H-40,TAU=Math.PI*2,FONT='"Caveat Brush","Comic Sans MS",cursive';
+const COL=['#B8243A','#F5EBAA','#CDE8F0','#B07AD0','#F3AA45'],NAMES=['Rosso','Bianco','Gin tonic','Lambrusco','Ambra'];
+const LQ=[['#B8243A','#4E0B18'],['#F5EBAA','#CDBB5C'],['rgba(205,238,248,.26)','rgba(120,190,215,.5)'],['#B884D8','#5A2680'],['#F3AA45','#B5601A']],NF=[0,2,8,7,0];
+const mix=(h,t,a)=>{const n=x=>parseInt(h.slice(x,x+2),16),m=t==='w'?255:0;return'#'+[1,3,5].map(i=>Math.round(n(i)+(m-n(i))*a).toString(16).padStart(2,'0')).join('')};
+const SURF=LQ.map((a,i)=>i==2?'rgba(240,252,255,.9)':i==3?'#F7D9EE':mix(a[0],'w',.4));
+const cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
+const dpr=Math.min(devicePixelRatio||1,2);cv.width=W*dpr;cv.height=H*dpr;
+let grid=[],shift=0,state='idle',cur=0,nxt=0,shot=null,ang=-Math.PI/2,score=0,dsc=0,level=1,miss=0,DROP=8,NC=3,shots=0,parts=[],last=0,aiming=false,T=0,shake=0,spin=0,spinV=0;
+const amb=Array.from({length:22},()=>({x:Math.random()*W,y:Math.random()*H,r:1.5+Math.random()*4,s:12+Math.random()*26,p:Math.random()*6}));
+const bgc=document.createElement('canvas');bgc.width=W*dpr;bgc.height=H*dpr;
+(function(){const g=bgc.getContext('2d');g.scale(dpr,dpr);
+const b=g.createRadialGradient(W/2,H*.35,30,W/2,H*.4,H*.8);b.addColorStop(0,'#2A382F');b.addColorStop(1,'#182019');g.fillStyle=b;g.fillRect(0,0,W,H);
+for(let i=0;i<7;i++){g.fillStyle='rgba(241,235,221,.03)';g.beginPath();g.ellipse(Math.random()*W,Math.random()*H*.8,60+Math.random()*90,14+Math.random()*24,Math.random()*3,0,TAU);g.fill()}
+for(let i=0;i<500;i++){g.fillStyle=`rgba(241,235,221,${Math.random()*.06})`;g.fillRect(Math.random()*W,Math.random()*H,1+Math.random()*1.5,1)}
+g.strokeStyle='rgba(241,235,221,.2)';g.lineWidth=1.6;g.lineJoin='round';
+for(let i=0;i<9;i++){const x=30+i*37,h=60+(i*17%14),w=13,y=H-70;g.beginPath();g.moveTo(x-w/2,y);g.lineTo(x-w/2,y-h*.55);g.quadraticCurveTo(x-w/2,y-h*.7,x-2.5,y-h*.78);g.lineTo(x-2.5,y-h);g.lineTo(x+2.5,y-h);g.lineTo(x+2.5,y-h*.78);g.quadraticCurveTo(x+w/2,y-h*.7,x+w/2,y-h*.55);g.lineTo(x+w/2,y);g.closePath();g.stroke();if(i%2){g.strokeRect(x-w/2+2,y-h*.4,w-4,12)}}
+const sk=g.createLinearGradient(0,H-70,0,H-62);sk.addColorStop(0,'#7A4A2B');sk.addColorStop(1,'#3a2013');g.fillStyle=sk;g.fillRect(0,H-68,W,6);
+g.fillStyle='#A9471B';g.fillRect(0,H-62,W,62);const tc=['#B5511F','#C25B24','#A9471B','#BB5522'];
+for(let y=H-62,row=0;y<H+16;y+=12,row++)for(let x=(row%2?0:-12)+0;x<W+24;x+=24){g.fillStyle=tc[(Math.random()*4)|0];g.beginPath();g.moveTo(x,y-12);g.lineTo(x+12,y);g.lineTo(x,y+12);g.lineTo(x-12,y);g.closePath();g.fill();g.strokeStyle='#4a2410';g.lineWidth=1.4;g.stroke()}
+const sh=g.createLinearGradient(0,H-62,0,H-40);sh.addColorStop(0,'rgba(0,0,0,.4)');sh.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=sh;g.fillRect(0,H-62,W,22)})();
+const off=r=>(r+shift)%2===1,cols=r=>off(r)?COLS-1:COLS,px=(r,c)=>R+c*2*R+(off(r)?R:0),py=r=>R+r*RH,rnd=()=>Math.floor(Math.random()*NC);
+const nk=(k,ox=0,oy=0)=>({k,ox,oy,vx:0,vy:0,wa:0,ax:0,wt:Math.random()*6,ph:Math.random()*6,L:newL()});
+const K=(r,c)=>grid[r][c]?grid[r][c].k:-1,P=o=>parts.push(o);
+const each=fn=>grid.forEach((row,r)=>row.forEach((b,c)=>b&&fn(b,r,c)));
+const txt=(t,x,y,sz,col)=>({t:'txt',x,y,vx:0,vy:-35,life:1.2,max:1.2,txt:t,sz,col});
+const ring=(x,y,col,life=.45)=>P({t:'ring',x,y,col,life,max:life,vx:0,vy:0});
+function nb(r,c){const d=off(r)?[0,1]:[-1,0],a=[[r,c-1],[r,c+1]];for(const dr of[-1,1])for(const dc of d)a.push([r+dr,c+dc]);return a.filter(([y,x])=>y>=0&&y<grid.length&&x>=0&&x<cols(y))}
+function pick(){const s=new Set();each(b=>s.add(b.k));const a=[...s];return a.length?a[Math.floor(Math.random()*a.length)]:rnd()}
+function addRow(){shift=(shift+1)%2;grid.pop();each(b=>b.oy-=RH*.9);grid.unshift(Array.from({length:cols(0)},()=>nk(rnd(),0,-RH*.9)))}
+function initGrid(rows,nc){NC=nc;shift=0;grid=Array.from({length:LIM+3},(_,r)=>Array(cols(r)).fill(null));for(let r=0;r<rows;r++)for(let c=0;c<cols(r);c++)grid[r][c]=nk(c&&Math.random()<.4?K(r,c-1):rnd())}
+function start(){level=1;score=dsc=0;beginLevel()}
+function beginLevel(){const nc=Math.min(5,3+Math.floor((level-1)/2)),rows=Math.min(8,3+level);DROP=Math.max(4,9-Math.ceil(level/2));
+initGrid(rows,nc);miss=0;shots=0;parts=[];cur=pick();nxt=pick();state='aim';ov.hidden=true;P(txt('Livello '+level,W/2,H/2-40,46,'#F2B84B'));snd('tappo');mus('partita')}
+function clearLv(){state='clear';snd('vinto');mus('cantina');const bonus=300+level*100;score+=bonus;
+for(let i=0;i<28;i++){const a=Math.random()*TAU,sp=80+Math.random()*170;P({t:'drop',x:W/2,y:H/2-40,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-80,g:500,col:COL[i%5],life:1.1,max:1.1})}
+P(txt('Vendemmia!',W/2,H/2-40,46,'#F2B84B'));
+setTimeout(()=>{if(state!=='clear')return;ov.hidden=false;ov.innerHTML=`<div class="label"><h2>Livello ${level} superato</h2><div class="big">+${bonus}</div><p>Il prossimo è più difficile.</p><button id="nx">Livello ${level+1}</button></div>`;document.getElementById('nx').onclick=()=>{level++;beginLevel()}},1100)}
+function bump(x,y,dx,dy,pow,radial){each((b,r,c)=>{const ex=px(r,c)-x,ey=py(r)-y,d=Math.hypot(ex,ey),f=Math.max(0,1-d/(R*5));if(f<=0)return;
+let ux=dx,uy=dy;if(radial){if(d<1)return;ux=ex/d;uy=ey/d}b.vx+=ux*pow*f;b.vy+=uy*pow*f;b.wa=Math.min(.4,b.wa+.3*f);b.ax=Math.atan2(uy,ux);b.wt=0})}
+function phys(dt){const s=Math.min(dt,.033);
+each((b,r,c)=>{let sx=0,sy=0,n=0;for(const[y,x]of nb(r,c)){const q=grid[y][x];if(q){sx+=q.ox;sy+=q.oy;n++}}
+const ax=-170*b.ox-9*b.vx+(n?55*(sx/n-b.ox):0)+Math.sin(T*1.7+b.ph)*7,ay=-170*b.oy-9*b.vy+(n?55*(sy/n-b.oy):0)+Math.cos(T*1.3+b.ph)*5;
+b.vx+=ax*s;b.vy+=ay*s;b.wa*=Math.exp(-3.2*s);b.wt+=s*22;liquid(b.L,b.vx,b.vy,s)});
+each(b=>{b.ox+=b.vx*s;b.oy+=b.vy*s})}
+function pop(r,c,type){const b=grid[r][c],x=px(r,c)+b.ox,y=py(r)+b.oy;grid[r][c]=null;
+if(type==='pop'){P({t:'pop',x,y,k:b.k,life:.25,max:.25,vx:0,vy:0,L:b.L});ring(x,y,COL[b.k]);
+for(let i=0;i<5;i++){const a=Math.random()*TAU,s=60+Math.random()*90;P({t:'drop',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-40,g:600,col:COL[b.k],life:.7,max:.7})}
+for(let i=0;i<3;i++)P({t:'fizz',x:x+(Math.random()-.5)*16,y,k:b.k,life:.9,max:.9,vx:(Math.random()-.5)*30,vy:-50-Math.random()*70});
+bump(x,y,0,0,110,true)}
+else P({t:'fall',L:b.L,x,y,k:b.k,vx:b.vx*.5+(Math.random()-.5)*70,vy:-60,g:900,wa:.25,ax:0,wt:0,life:1.9,max:1.9})}
+function resolve(r,c){const k=K(r,c),seen=new Set([r*20+c]),q=[[r,c]];
+while(q.length){const[y,x]=q.pop();for(const[a,b]of nb(y,x))if(K(a,b)===k&&!seen.has(a*20+b)){seen.add(a*20+b);q.push([a,b])}}
+let n=0,d=0;if(seen.size<3)return 0;n=seen.size;seen.forEach(id=>pop(id/20|0,id%20,'pop'));
+const ok=new Set(),s=[];for(let x=0;x<cols(0);x++)if(grid[0][x]){ok.add(x);s.push([0,x])}
+while(s.length){const[y,x]=s.pop();for(const[a,b]of nb(y,x))if(grid[a][b]&&!ok.has(a*20+b)){ok.add(a*20+b);s.push([a,b])}}
+for(let y=1;y<grid.length;y++)for(let x=0;x<cols(y);x++)if(grid[y][x]&&!ok.has(y*20+x)){pop(y,x,'fall');d++}
+const pts=n*10+d*20;score+=pts;const tx=Math.max(60,Math.min(W-60,px(r,c))),ty=py(r)+30;
+P(txt('+'+pts,tx,ty,20,'#F1EBDD'));
+if(d>=3)P(txt('Che cascata!',W/2,ty+30,32,'#EE96A8'));else if(n>=6)P(txt('Salute!',W/2,ty+30,32,'#F2B84B'));else if(n>=4)P(txt('Cin cin!',W/2,ty+30,32,'#F2B84B'));
+shake=Math.min(14,4+n*.8+d*.8);snd('abbinamento',Math.min(7,n-2));if(n>=5)snd('tappo');if(d>0)snd('cascata',d);return n}
+function land(){let b=null,bd=1e9;for(let r=0;r<grid.length;r++)for(let c=0;c<cols(r);c++)if(!grid[r][c]){const dx=shot.x-px(r,c),dy=shot.y-py(r),d=dx*dx+dy*dy;if(d<bd){bd=d;b=[r,c]}}
+const[r,c]=b,sp=Math.hypot(shot.vx,shot.vy),ux=shot.vx/sp,uy=shot.vy/sp,n=nk(shot.k,Math.max(-R,Math.min(R,shot.x-px(r,c))),Math.max(-R,Math.min(R,shot.y-py(r))));
+n.wa=.35;n.ax=Math.atan2(uy,ux);n.wt=0;n.vx=ux*80;n.vy=uy*80;grid[r][c]=n;bump(px(r,c),py(r),ux,uy,190,false);ring(px(r,c),py(r),'#F1EBDD',.35);shake=Math.max(shake,3);snd('tocco');
+shot=null;const nn=resolve(r,c);shots++;
+if(nn)miss=Math.max(0,miss-1);else if(++miss>=DROP){miss=0;addRow();shake=Math.max(shake,5);P(txt('Il soffitto scende',W/2,60,24,'#EE96A8'));snd('discesa')}else snd('mancato');
+if(grid.slice(LIM).some(row=>row.some(Boolean)))return end();
+let any=false;each(()=>any=true);if(!any)return clearLv();
+cur=nxt;nxt=pick();state='aim'}
+function hit(){for(let r=0;r<grid.length;r++)for(let c=0;c<cols(r);c++)if(grid[r][c]){const dx=shot.x-px(r,c),dy=shot.y-py(r);if(dx*dx+dy*dy<(R*1.8)**2)return true}return false}
+function step(){for(let i=0;i<4;i++){shot.x+=shot.vx/4;shot.y+=shot.vy/4;
+if(shot.x<R||shot.x>W-R){shot.x=Math.max(R,Math.min(W-R,shot.x));shot.vx*=-1;shot.wa=-.32;shot.wt=0;shot.ax=0;ring(shot.x,shot.y,COL[shot.k],.3);snd('tocco')}
+if(shot.y<=R||hit())return land()}
+P({t:'trail',x:shot.x,y:shot.y,k:shot.k,life:.3,max:.3,vx:0,vy:0})}
+function shoot(){if(state!=='aim')return;shot={x:SX,y:SY,vx:Math.cos(ang)*14,vy:Math.sin(ang)*14,k:cur,wa:0,wt:0,ax:0,L:newL()};state='fly';spinV=9;snd('tiro')}
+function newL(){return{sl:0,sv:0,hy:0,hv:0,w:Array(7).fill(0),wv:Array(7).fill(0),px:0,py:0,ph:Math.random()*6}}
+function liquid(L,vx,vy,s){const c=v=>Math.max(-400,Math.min(400,v)),dx=c(vx-L.px),dy=c(vy-L.py);L.px=vx;L.py=vy;
+L.sv+=(-85*L.sl-3*L.sv)*s+dx*.03+Math.sin(T*1.6+L.ph)*6*s;L.sl=Math.max(-1.2,Math.min(1.2,L.sl+L.sv*s));
+L.hv+=(-120*L.hy-3.5*L.hv)*s-dy*.012;L.hy=Math.max(-.4,Math.min(.4,L.hy+L.hv*s));
+for(let i=0;i<7;i++){const a=L.w[i?i-1:0],b=L.w[i<6?i+1:6];L.wv[i]+=(-70*L.w[i]-1.8*L.wv[i]+60*(a+b-2*L.w[i]))*s+dx*.012*(i-3)/3+dy*.009*(i%2?1:-1)+Math.sin(T*2.6+L.ph+i*.9)*3*s}
+for(let i=0;i<7;i++)L.w[i]=Math.max(-.5,Math.min(.5,L.w[i]+L.wv[i]*s))}
+function bub(g,x,y,k,rad=R,s=1,ax=0,al=1,L=null,ph=0){g.save();g.globalAlpha=al;const r=rad-1,lv0=-.18*r,E=()=>{g.beginPath();g.ellipse(x,y,r*s,r/s,ax,0,TAU)};
+E();g.fillStyle='rgba(235,245,240,.1)';g.fill();
+g.save();g.clip();g.translate(x,y);g.rotate(L?L.sl:0);
+const lv=lv0+(L?L.hy*r*.9:0),xs=-r*1.3,dx=r*2.6/6,pts=[];for(let i=0;i<7;i++)pts.push([xs+i*dx,lv+(L?L.w[i]*r*1.0:0)]);
+const top=()=>{g.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<6;i++)g.quadraticCurveTo(pts[i][0],pts[i][1],(pts[i][0]+pts[i+1][0])/2,(pts[i][1]+pts[i+1][1])/2);g.lineTo(pts[6][0],pts[6][1])};
+const gl=g.createLinearGradient(0,lv0,0,r);gl.addColorStop(0,LQ[k][0]);gl.addColorStop(1,LQ[k][1]);
+g.beginPath();top();g.lineTo(xs+r*2.6,r*2);g.lineTo(xs,r*2);g.closePath();g.fillStyle=gl;g.fill();
+g.beginPath();top();g.strokeStyle=SURF[k];g.lineWidth=k==3?4.5:1.8;g.stroke();
+if(k==2){g.save();g.translate(r*.18,lv+r*.26);g.rotate(.5+(L?L.sl*1.4:0));g.fillStyle='#7fb83f';g.beginPath();g.arc(0,0,r*.3,0,TAU);g.fill();g.fillStyle='#e3f2b8';g.beginPath();g.arc(0,0,r*.23,0,TAU);g.fill();g.strokeStyle='#9cc95a';g.lineWidth=.8;g.beginPath();for(let i=0;i<5;i++){const a=i*TAU/5;g.moveTo(0,0);g.lineTo(Math.cos(a)*r*.22,Math.sin(a)*r*.22)}g.stroke();g.restore()}
+for(let i=0;i<NF[k];i++){const bx=Math.sin(ph+i*2.1)*r*.5,by=r*.85-((T*16+i*11+ph*5)%(r*.9));g.strokeStyle='rgba(255,255,255,.7)';g.lineWidth=.9;g.beginPath();g.arc(bx,by,.7+(i%3)*.4,0,TAU);g.stroke()}
+g.restore();
+const gr=g.createRadialGradient(x-r*.3,y-r*.35,r*.15,x,y,r*1.05);gr.addColorStop(0,'rgba(255,255,255,.12)');gr.addColorStop(.7,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,.4)');E();g.fillStyle=gr;g.fill();
+g.lineWidth=1.6;g.strokeStyle='rgba(235,245,240,.55)';g.stroke();
+g.strokeStyle='rgba(255,255,255,.3)';g.lineWidth=1.4;g.beginPath();g.arc(x,y,r*.82,Math.PI*.78,Math.PI*1.18);g.stroke();
+g.fillStyle='rgba(255,255,255,.8)';g.beginPath();g.ellipse(x-r*.4,y-r*.44,r*.28,r*.12,-.7,0,TAU);g.fill();
+g.fillStyle='rgba(255,255,255,.3)';g.beginPath();g.arc(x+r*.42,y+r*.4,r*.09,0,TAU);g.fill();g.restore()}
+function gear(x,y,rot){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=8;ctx.shadowOffsetY=3;
+const n=10,ri=25,ro=32;ctx.beginPath();for(let i=0;i<n;i++){const a=i*TAU/n,p=[[ri,-.17],[ro,-.1],[ro,.1],[ri,.17]];p.forEach(([r,d],j)=>{const X=Math.cos(a+d)*r,Y=Math.sin(a+d)*r;i+j?ctx.lineTo(X,Y):ctx.moveTo(X,Y)})}ctx.closePath();
+const g=ctx.createLinearGradient(-30,-30,30,30);g.addColorStop(0,'#E6BE62');g.addColorStop(1,'#9C7526');ctx.fillStyle=g;ctx.fill();ctx.shadowColor='transparent';
+ctx.fillStyle='#6d5019';ctx.beginPath();ctx.arc(0,0,21,0,TAU);ctx.fill();ctx.restore()}
+function ray(){const pts=[];let x=SX,y=SY,vx=Math.cos(ang),vy=Math.sin(ang);
+for(let i=0;i<130;i++){x+=vx*8;y+=vy*8;if(x<R||x>W-R){vx*=-1;x=Math.max(R,Math.min(W-R,x))}if(i%2)pts.push([x,y]);if(y<R)break;let h=false;
+for(let r=0;r<grid.length&&!h;r++)for(let c=0;c<cols(r);c++)if(grid[r][c]){const dx=x-px(r,c),dy=y-py(r);if(dx*dx+dy*dy<(R*1.8)**2){h=true;break}}if(h)break}
+return pts}
+function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.save();
+if(shake>.2)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
+ctx.drawImage(bgc,0,0,W,H);
+const lg=ctx.createRadialGradient(W/2,-20,10,W/2,-20,320);lg.addColorStop(0,'rgba(255,214,120,.16)');lg.addColorStop(1,'rgba(255,214,120,0)');ctx.fillStyle=lg;ctx.fillRect(0,0,W,H);
+for(const a of amb){const x=a.x+Math.sin(T*.8+a.p)*10,y=(a.y-T*a.s%(H+20)+H+20)%(H+20)-10;ctx.strokeStyle='rgba(241,235,221,.14)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,a.r,0,TAU);ctx.stroke()}
+let low=0;each((b,r)=>{if(r>low)low=r});const dg=low>=LIM-3,y0=py(LIM)-R;danger=dg;
+if(dg){const g=ctx.createLinearGradient(0,y0-50,0,y0);g.addColorStop(0,'rgba(230,60,70,0)');g.addColorStop(1,`rgba(230,60,70,${.25+.2*Math.sin(T*9)})`);ctx.fillStyle=g;ctx.fillRect(0,y0-50,W,50)}
+const pl=ctx.createLinearGradient(0,y0,0,y0+8);pl.addColorStop(0,'#8a5530');pl.addColorStop(1,'#4B2C1B');ctx.fillStyle=pl;ctx.fillRect(0,y0,W,8);ctx.fillStyle='rgba(255,220,170,.35)';ctx.fillRect(0,y0,W,1.5);
+each((b,r,c)=>bub(ctx,px(r,c)+b.ox,py(r)+b.oy,b.k,R,1+b.wa*Math.cos(b.wt),b.ax,1,b.L,b.ph));
+if(state==='aim'){const p=ray();p.forEach(([x,y],i)=>{ctx.fillStyle=`rgba(241,235,221,${.85-i/p.length*.55})`;ctx.beginPath();ctx.arc(x,y,2.3,0,TAU);ctx.fill()});
+if(p.length){const[x,y]=p[p.length-1];ctx.strokeStyle=COL[cur];ctx.globalAlpha=.7;ctx.setLineDash([4,4]);ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,R-1,0,TAU);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1}}
+for(const p of parts){const k=Math.max(0,p.life/p.max);
+if(p.t==='pop')bub(ctx,p.x,p.y,p.k,R*(1+(1-k)*.6),1,0,k,p.L);
+else if(p.t==='fizz'){ctx.globalAlpha=k;ctx.strokeStyle=COL[p.k];ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(p.x,p.y,3,0,TAU);ctx.stroke();ctx.globalAlpha=1}
+else if(p.t==='trail'){ctx.globalAlpha=k*.35;ctx.fillStyle=COL[p.k];ctx.beginPath();ctx.arc(p.x,p.y,R*.8*k,0,TAU);ctx.fill();ctx.globalAlpha=1}
+else if(p.t==='ring'){ctx.globalAlpha=k;ctx.strokeStyle=p.col;ctx.lineWidth=3*k+.5;ctx.beginPath();ctx.arc(p.x,p.y,R*.6+(1-k)*R*2.4,0,TAU);ctx.stroke();ctx.globalAlpha=1}
+else if(p.t==='drop'){ctx.globalAlpha=k;ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,2.5*k+.5,0,TAU);ctx.fill();ctx.globalAlpha=1}
+else if(p.t==='txt'){ctx.globalAlpha=Math.min(1,k*2);const sc=1+Math.max(0,k-.85)*4;ctx.font=`${p.sz*sc}px ${FONT}`;ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=5;ctx.strokeStyle='#14110F';ctx.fillStyle=p.col;ctx.strokeText(p.txt,p.x,p.y);ctx.fillText(p.txt,p.x,p.y);ctx.globalAlpha=1}
+else bub(ctx,p.x,p.y,p.k,R,1+p.wa*Math.cos(p.wt),p.ax,Math.min(1,p.life/.5),p.L)}
+gear(SX,SY,ang*3+spin);
+ctx.save();ctx.translate(SX,SY);ctx.rotate(ang);ctx.fillStyle='#F1EBDD';ctx.beginPath();ctx.moveTo(44,0);ctx.lineTo(35,-6);ctx.lineTo(35,6);ctx.closePath();ctx.fill();ctx.restore();
+if(shot){const sq=shot.wa<-.05?1+shot.wa*Math.cos(shot.wt):1.14;bub(ctx,shot.x,shot.y,shot.k,R,sq,shot.wa<-.05?0:Math.atan2(shot.vy,shot.vx),1,shot.L)}
+else if(state==='aim'||state==='fly')bub(ctx,SX,SY,cur,R,1+.04*Math.sin(T*4));
+bub(ctx,46,H-32,nxt,R*.75);
+if(state==='aim'||state==='fly')for(let i=0;i<DROP;i++){const x=W-14-i*13,y=H-20;ctx.beginPath();ctx.arc(x,y,4,0,TAU);if(i<DROP-miss){ctx.fillStyle='#F1EBDD';ctx.fill()}else{ctx.strokeStyle='rgba(241,235,221,.55)';ctx.lineWidth=1.5;ctx.stroke()}}
+ctx.restore();ctx.setTransform(dpr,0,0,dpr,0,0);
+const vg=ctx.createRadialGradient(W/2,H/2,H*.38,W/2,H/2,H*.75);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.35)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+}
+function loop(t){const dt=Math.min((t-last)/1000||0,.05);last=t;T+=dt;
+phys(dt);if(state==='fly')step();if(state==='aim'||state==='fly')mus(danger?'pericolo':'partita');
+shake*=Math.exp(-7*dt);spin+=spinV*dt;spinV*=Math.exp(-3*dt);dsc+=(score-dsc)*Math.min(1,dt*10);
+parts=parts.filter(p=>{p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.g)p.vy+=p.g*dt;if(p.L)liquid(p.L,p.vx,p.vy,Math.min(dt,.033));
+if(p.wa!==undefined){p.wa*=Math.exp(-3*dt);p.wt+=dt*22}
+if(p.t==='fall'&&p.y>H-R-70){p.y=H-R-70;if(Math.abs(p.vy)>60){p.vy*=-.4;p.vx*=.7;p.wa=.3;p.ax=Math.PI/2;p.wt=0}else{p.vy=0;p.g=0;p.vx*=.8}}
+return p.life>0});
+if(shot){shot.wa*=Math.exp(-6*dt);shot.wt+=dt*30;liquid(shot.L,shot.vx*60,shot.vy*60,Math.min(dt,.033))}
+draw();document.getElementById('sc').textContent=Math.round(dsc)+' punti';document.getElementById('lv').textContent='Livello '+level;requestAnimationFrame(loop)}
+function pt(e){const b=cv.getBoundingClientRect(),x=(e.clientX-b.left)*W/b.width,y=(e.clientY-b.top)*H/b.height;ang=Math.max(-Math.PI+.17,Math.min(-.17,Math.atan2(y-SY,x-SX)))}
+cv.addEventListener('pointerdown',e=>{aiming=true;cv.setPointerCapture(e.pointerId);pt(e)});
+cv.addEventListener('pointermove',e=>{if(aiming||e.pointerType==='mouse')pt(e)});
+cv.addEventListener('pointerup',e=>{if(aiming){pt(e);aiming=false;shoot()}});
+const KEY='vdb-classifica',day=()=>new Date().toISOString().slice(0,10);
+function lb(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+function listHTML(){const t=lb().filter(e=>e.d===day()).sort((a,b)=>b.s-a.s).slice(0,5);return t.length?'<ol>'+t.map(e=>`<li><span>${e.n}</span><span class="muted">liv. ${e.l||1}</span><b>${e.s}</b></li>`).join('')+'</ol>':'<p class="muted">Nessun punteggio oggi. Il primo posto è libero.</p>'}
+function legend(){ov.querySelectorAll('canvas.lg').forEach((c,i)=>{c.width=c.height=44;bub(c.getContext('2d'),22,22,i,21)})}
+function showStart(){state='idle';level=1;initGrid(5,5);mus('cantina');ov.hidden=false;ov.innerHTML=`<div class="label"><h2>Vineria della Bovisa</h2><p>Il gioco dei brindisi</p>
+<div class="lg-row">${NAMES.map(n=>`<figure><canvas class="lg"></canvas>${n}</figure>`).join('')}</div>
+<p>Trascina per mirare, rilascia per sparare. Unisci tre o più drink uguali e svuota la lavagna. Se sbagli troppo il soffitto scende: guarda i puntini in basso a destra.</p><p class="muted">Nessun limite di tempo. Ogni livello è più difficile.</p>
+<p class="muted">Il miglior punteggio della settimana vince un calice.</p><button id="go">Inizia la partita</button>
+<h3>Classifica di oggi</h3>${listHTML()}</div>`;legend();document.getElementById('go').onclick=start}
+function end(){if(state==='over')return;state='over';snd('perso');mus('cantina');shot=null;ov.hidden=false;
+ov.innerHTML=`<div class="label"><h2>Fine partita</h2><div class="big">${score}</div><p>punti, livello ${level}</p><p>Le tue iniziali</p><input id="ini" maxlength="3" autocomplete="off" aria-label="Iniziali"><br><button id="sv">Salva il punteggio</button></div>`;
+document.getElementById('sv').onclick=()=>{const n=(document.getElementById('ini').value.replace(/[^A-Za-z]/g,'').toUpperCase()||'---').slice(0,3),a=lb();a.push({n,s:score,l:level,d:day()});try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}
+const w=new Date().toLocaleString('it-IT',{dateStyle:'short',timeStyle:'short'});
+ov.innerHTML=`<div class="label"><h2>Salute, ${n}!</h2><div class="proof"><b>${score} punti, livello ${level}</b><br><span class="muted">${w}</span><br><span class="muted">Mostra questa schermata al banco</span></div><h3>Classifica di oggi</h3>${listHTML()}<button id="again">Gioca ancora</button></div>`;
+document.getElementById('again').onclick=showStart}}
+let want='cantina',sent=null,unlocked=false,danger=false,prefs={m:true,f:true};
+try{Object.assign(prefs,JSON.parse(localStorage.getItem('vdb-audio')||'{}'))}catch(e){}
+const snd=(n,a)=>{try{A.suona(n,a)}catch(e){}};
+function mus(t){want=t;if(!unlocked||!prefs.m||sent===t)return;sent=t;try{A.musica(t)}catch(e){}}
+const EV=['pointerup','click','keydown'];
+function unlock(){if(unlocked)return;unlocked=true;EV.forEach(n=>document.removeEventListener(n,unlock,true));try{A.sveglia();A.metti('musica',prefs.m);A.metti('effetti',prefs.f)}catch(e){}sent=null;mus(want)}
+EV.forEach(n=>document.addEventListener(n,unlock,true));
+const bm=document.getElementById('bm'),bf=document.getElementById('bf');
+const paint=()=>{bm.setAttribute('aria-pressed',prefs.m);bf.setAttribute('aria-pressed',prefs.f)},saveP=()=>{try{localStorage.setItem('vdb-audio',JSON.stringify(prefs))}catch(e){}};
+bm.onclick=()=>{unlock();prefs.m=!prefs.m;saveP();paint();sent=null;try{A.metti('musica',prefs.m);if(prefs.m)mus(want);else A.silenzio()}catch(e){}};
+bf.onclick=()=>{unlock();prefs.f=!prefs.f;saveP();paint();try{A.metti('effetti',prefs.f)}catch(e){}if(prefs.f)snd('ui')};
+paint();
+document.addEventListener('visibilitychange',()=>{if(!unlocked)return;if(document.hidden){try{A.silenzio()}catch(e){}sent=null}else mus(want)});
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.label button'))snd('ui')});
+showStart();requestAnimationFrame(loop);
+</script>
+</body>
+</html>
