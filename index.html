@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vineria della Bovisa – Il gioco dei brindisi</title>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Caveat+Brush&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Noto+Serif+Display:wdth,wght@62.5..100,400..900&display=swap" rel="stylesheet">
 <style>
-:root{--muro:#C4271C;--giallo:#F2B84B;--legno:#4B2C1B;--legno2:#7A4A2B;--lavagna:#1E2822;--gesso:#F1EBDD;--nero:#14110F;
+:root{--muro:#C4271C;--giallo:#F2B84B;--legno:#4B2C1B;--legno2:#7A4A2B;--lavagna:#1E2822;--gesso:#F1EBDD;--nero:#14110F;--disp:"Winery","Noto Serif Display","Playfair Display",Georgia,serif;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
@@ -17,47 +17,53 @@ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wid
 .lamp b{display:block;width:var(--w);height:calc(var(--w)*1.7);border-radius:50% 50% 46% 46%/38% 38% 62% 62%;background:linear-gradient(#fffbe6,#ffe18c);box-shadow:0 0 50px 24px rgba(255,205,100,.5)}
 @keyframes sway{from{transform:rotate(-1.6deg)}to{transform:rotate(1.6deg)}}
 @media (prefers-reduced-motion:reduce){.lamp,.label{animation:none}}
-.hud{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:8px;height:44px;margin:8px auto 4px;padding:0 14px;width:calc(100vw - 24px);max-width:520px;background:var(--lavagna);border:3px solid var(--legno2);box-shadow:0 0 0 2px var(--nero),0 6px 16px rgba(0,0,0,.4)}
-.hud h1{margin:0;font:400 25px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--gesso);text-align:center;letter-spacing:.02em}
-.hud span{min-width:70px;font:400 20px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--giallo);font-variant-numeric:tabular-nums}.hud span:last-child{text-align:right}.hud span:first-child{text-align:left}
-.stage{position:relative;z-index:1;margin:8px auto 0;aspect-ratio:9/14;height:min(calc(100dvh - 86px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)),calc((100vw - 28px) * 1.5556));max-width:calc(100vw - 28px);background:var(--lavagna);box-shadow:0 0 0 7px var(--legno2),0 0 0 9px var(--nero),inset 0 0 0 2px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.6);overflow:hidden}
+:root{--sh:min(calc(100dvh - 124px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)),calc((100vw - 28px) * 1.5556))}
+.game{position:relative;z-index:1;width:calc(var(--sh) * .642857);margin:0 auto}
+.hud{container-type:inline-size;display:flex;flex-direction:column;justify-content:center;gap:4px;height:84px;margin:8px -9px 0;padding:0 14px;background:var(--lavagna);border:3px solid var(--legno2);box-shadow:0 0 0 2px var(--nero),0 6px 16px rgba(0,0,0,.4)}
+.hud .row{display:flex;justify-content:space-between;gap:8px}
+.hud h1{margin:0;text-align:center;white-space:nowrap;overflow:hidden;font:700 34px/1 var(--disp);font-size:min(36px,9cqw);color:var(--gesso)}
+.hud span{white-space:nowrap;font:700 22px/1 var(--disp);font-size:min(24px,6.4cqw);color:var(--giallo);font-variant-numeric:tabular-nums}
+.stage{position:relative;z-index:1;margin:14px 0 0;width:100%;aspect-ratio:9/14;background:var(--lavagna);box-shadow:0 0 0 7px var(--legno2),0 0 0 9px var(--nero),inset 0 0 0 2px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.6);overflow:hidden}
 canvas#c{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
 .ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,17,15,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:10px;overflow:auto}
 .ov[hidden]{display:none}
 .label{background:var(--lavagna);border:6px solid var(--legno2);box-shadow:0 0 0 2px var(--nero),inset 0 0 0 2px rgba(241,235,221,.22),0 10px 30px rgba(0,0,0,.6);padding:18px 16px;text-align:center;width:min(300px,92%);margin:8px 0;animation:in .6s cubic-bezier(.2,1.4,.4,1)}
 @keyframes in{from{transform:translateY(24px) scale(.94);opacity:0}}
-.label h2{margin:0 0 2px;font:400 44px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--gesso)}
+.label h2{margin:0 0 2px;font:700 52px/.95 var(--disp);color:var(--gesso)}
 .label p{margin:8px 0}.muted{opacity:.7;font-size:13px}
 .lg-row{display:flex;justify-content:center;gap:6px;margin:12px 0}
 .lg-row figure{margin:0;font-size:11px}.lg-row canvas{display:block;width:40px;height:40px}
-h3{font:400 22px "Caveat Brush","Comic Sans MS",cursive;margin:14px 0 0;color:var(--giallo)}
-button{font:600 16px Archivo,system-ui,sans-serif;background:var(--muro);color:var(--gesso);border:2px solid var(--gesso);border-radius:2px;padding:11px 22px;cursor:pointer;margin-top:8px;transition:transform .12s,filter .12s}
+h3{font:700 26px var(--disp);margin:14px 0 0;color:var(--giallo)}
+button{font:700 21px var(--disp);background:var(--muro);color:var(--gesso);border:2px solid var(--gesso);border-radius:2px;padding:11px 22px;cursor:pointer;margin-top:8px;transition:transform .12s,filter .12s}
 button:hover{filter:brightness(1.12)}button:active{transform:scale(.96)}
 button:focus-visible,input:focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
-input{font:400 30px "Caveat Brush","Comic Sans MS",cursive;width:110px;text-align:center;letter-spacing:.2em;background:transparent;color:var(--gesso);border:2px dashed rgba(241,235,221,.6);border-radius:2px;padding:4px;text-transform:uppercase}
+input{font:700 34px var(--disp);width:110px;text-align:center;letter-spacing:.2em;background:transparent;color:var(--gesso);border:2px dashed rgba(241,235,221,.6);border-radius:2px;padding:4px;text-transform:uppercase}
 ol{list-style:none;margin:8px auto;padding:0;max-width:210px;text-align:left}
 ol li{display:flex;justify-content:space-between;border-bottom:1px dotted rgba(241,235,221,.45);padding:3px 0}
-.big{font:400 64px/1 "Caveat Brush","Comic Sans MS",cursive;color:var(--giallo);margin:4px 0}
+.big{font:700 80px/1 var(--disp);color:var(--giallo);margin:4px 0}
 .proof{border:2px dashed var(--giallo);padding:10px;margin:10px 0}
 .snd{position:absolute;top:8px;right:8px;z-index:3;display:flex;gap:6px}
 .snd button{width:38px;height:38px;padding:0;margin:0;border-radius:50%;background:rgba(20,17,15,.6);border:1.5px solid rgba(241,235,221,.6);color:var(--gesso);display:grid;place-items:center;position:relative}
 .snd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .snd button[aria-pressed=false]{opacity:.55}
 .snd button[aria-pressed=false]::after{content:"";position:absolute;width:26px;height:2px;background:var(--gesso);transform:rotate(-45deg)}
+.hud h1,.hud span,.label h2,h3,.big,input,button{font-stretch:62.5%;font-variation-settings:"wdth" 62.5;text-transform:uppercase;letter-spacing:.05em}
 </style>
 </head>
 <body>
 <div class="lamp" style="left:5%;--h:38px;--w:30px"><i></i><b></b></div>
 <div class="lamp" style="left:calc(50% - 22px);--h:14px;--w:44px;animation-delay:-3s"><i></i><b></b></div>
 <div class="lamp" style="right:6%;--h:60px;--w:34px;animation-delay:-5s"><i></i><b></b></div>
-<header class="hud"><span id="lv">Livello 1</span><h1>Vineria della Bovisa</h1><span id="sc">0 punti</span></header>
+<div class="game">
+<header class="hud"><h1>Vineria della Bovisa</h1><div class="row"><span id="lv">Livello 1</span><span id="sc">0 punti</span></div></header>
 <div class="stage"><canvas id="c"></canvas><div class="ov" id="ov"></div>
 <div class="snd"><button id="bm" aria-pressed="true" aria-label="Musica"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button><button id="bf" aria-pressed="true" aria-label="Effetti sonori"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button></div></div>
+</div>
 <script>
 // Cantina — suono. Tutto generato qui dentro: nessun file, nessuna libreria.
 // Due cose: gli effetti (tappo, colpo, vetro, cascata) e una musica di fondo
-// blues: dodici battute in la minore, basso che cammina, ride, spazzole, un
-// paio di accordi e il tema ogni tanto. Una cosa sola che suoni, ma suonata.
+// canzoncina: otto battute in do maggiore, basso a pizzico, chitarra sul
+// controtempo, shaker e un tema a carillon che fa l'eco al secondo giro.
 //
 // I browser non fanno suonare niente senza un gesto dell'utente: per questo
 // l'audio si apre al primo tocco e ogni funzione è sicura anche se è muto,
@@ -268,40 +274,37 @@ function suona(nome, n) {
   if (f) { try { f.call(EFFETTI, n); } catch (e) { /* un suono rotto non ferma la partita */ } }
 }
 /* ---------- la musica ---------- */
-// Dodici battute in la minore: la forma del blues che chiunque conosce. Ogni
-// accordo è un sette — è la settima stonata, quella che un accordo maggiore non
-// ha, a fare la differenza fra un valzer e del jazz.
+// Una canzoncina in do maggiore, otto battute che girano: basso a pizzico,
+// chitarra sul controtempo, shaker, un pad morbido e il tema suonato da un
+// carillon. Al secondo giro il carillon si fa l'eco da solo.
+const hz  = (s) => 261.63 * Math.pow(2, s / 12);      // semitoni da do4
+const mel = (s) => 523.25 * Math.pow(2, s / 12);      // semitoni da do5
 const FORMA = [
-  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
-  { basso: 146.83, toni: [293.66, 369.99, 440.00, 493.88] },   // D7
-  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
-  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
-  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
-  { basso: 146.83, toni: [293.66, 369.99, 440.00, 493.88] },   // D7
-  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
-  { basso: 164.81, toni: [329.63, 415.30, 493.88, 587.33] },   // E7, il punto in cui il tema torna
-  { basso: 110.00, toni: [220.00, 261.63, 329.63, 392.00] },   // Am7
-  { basso: 146.83, toni: [293.66, 369.99, 440.00, 493.88] },   // D7
-  { basso: 164.81, toni: [329.63, 415.30, 493.88, 587.33] },   // E7
-  { basso: 164.81, toni: [329.63, 415.30, 493.88, 587.33] },   // E7, la volta che chiude
+  { r: -12, ch: [0, 4, 7] },      // C
+  { r: -15, ch: [-3, 0, 4] },     // Am
+  { r: -19, ch: [-7, -3, 0] },    // F
+  { r: -17, ch: [-5, -1, 2] },    // G
+  { r: -12, ch: [0, 4, 7] },      // C
+  { r: -15, ch: [-3, 0, 4] },     // Am
+  { r: -10, ch: [-3, 2, 5] },     // Dm
+  { r: -17, ch: [-5, -1, 2] },    // G
+];
+// Il tema: [ottavo della battuta, semitoni da do5, durata in ottavi]
+const TEMA = [
+  [[0, 7, 2], [2, 4, 1], [3, 7, 1], [4, 12, 3]],
+  [[0, 9, 2], [2, 7, 1], [3, 4, 1], [4, 4, 2], [6, 2, 2]],
+  [[0, 5, 2], [2, 9, 1], [3, 12, 1], [4, 9, 2], [6, 5, 2]],
+  [[0, 7, 2], [2, 11, 1], [3, 14, 1], [4, 11, 4]],
+  [[0, 7, 2], [2, 4, 1], [3, 7, 1], [4, 12, 2], [6, 16, 2]],
+  [[0, 16, 2], [2, 14, 1], [3, 12, 1], [4, 9, 4]],
+  [[0, 14, 2], [2, 12, 1], [3, 9, 1], [4, 5, 2], [6, 9, 2]],
+  [[0, 7, 2], [2, 5, 1], [3, 4, 1], [4, 2, 2], [6, -1, 2]],
 ];
 const TIPI = {
-  cantina:  { bpm: 78,  basso: 0.5, ride: 0.3, spazzole: 0.3, comping: 0.35, melodia: 0,    coda: 0.5 },
-  partita:  { bpm: 98,  basso: 0.5, ride: 0.42, spazzole: 0.4, comping: 0.5, melodia: 0.55, coda: 0.3 },
-  pericolo: { bpm: 124, basso: 0.5, ride: 0.52, spazzole: 0.5, comping: 0.5, melodia: 0.75, coda: 0 },
+  cantina:  { bpm: 84,  basso: 0.5,  shaker: 0.25, tick: 0,   comping: 0.5, pad: 0.6, melodia: 0.8 },
+  partita:  { bpm: 108, basso: 0.55, shaker: 0.45, tick: 0.5, comping: 0.6, pad: 0.4, melodia: 0.85 },
+  pericolo: { bpm: 132, basso: 0.6,  shaker: 0.6,  tick: 0.7, comping: 0.7, pad: 0.2, melodia: 1 },
 };
-// La scala del blues in la, con il terzo minore e il secondo diesis insieme:
-// le due note che il jazz ci mette dentro e la musica pop non mette.
-const semitoni = (semi) => 220 * Math.pow(2, semi / 12);
-// Il tema: due frasi, una sulle battute 7-8 e il finale sulle 11-12. Note in
-// semitoni da la3, [quando, nota, quante unità].
-const FRASI = {
-  6:  [[0, 0, 2], [2, 3, 2], [4, 5, 2], [6, 7, 5]],
-  7:  [[0, 5, 2], [2, 3, 2], [4, 0, 8]],
-  10: [[0, 0, 1], [1, 3, 1], [2, 5, 1], [3, 7, 1], [4, 8, 1], [5, 7, 1], [6, 5, 5]],
-};
-// Una grana stabile per (battuta, tempo): non è un numero casuale vero, quindi
-// la musica cambia a ogni giro ma suona uguale a ogni ascolto.
 const grana = (a, b) => {
   const x = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
   return x - Math.floor(x);
@@ -312,21 +315,16 @@ function mettiMusica(tipo) {
   if (musica && musica === tipo) return;
   musica = tipo;
   if (!ctx) return;
-  passo = 0;
-  prossimo = ctx.currentTime + 0.08;
-  if (!timer) timer = setInterval(passa, 40);   // guarda un po' avanti, non al millisecondo
+  if (!timer) { passo = 0; prossimo = ctx.currentTime + 0.08; timer = setInterval(passa, 40); }
 }
 function fermaMusica() {
   musica = null;
   if (timer) { clearInterval(timer); timer = null; }
 }
-
-// Il cuore è qui: ogni 40 ms guarda i prossimi due passi e suona quelli che
-// toccano. Così il tempo tiene anche se il disegno rallenta.
 function passa() {
   if (!ctx || !musica) return;
   const cfg = TIPI[musica] || TIPI.partita;
-  const unita = 60 / cfg.bpm / 3;              // tre unità per battito: è lo swing
+  const unita = 60 / cfg.bpm / 2;               // otto ottavi per battuta
   const fine = ctx.currentTime + Math.max(0.12, unita * 3);
   while (prossimo < fine) {
     suonaPasso(passo, prossimo, cfg, unita);
@@ -334,67 +332,28 @@ function passa() {
     prossimo += unita;
   }
 }
-
-// Il basso che cammina: quattro note per battuta e l'ultima scivella dentro
-// l'accordo dopo. È la linea che dice "jazz" più di tutto il resto.
-function passoBasso(battuta, battito, accordo, prossimo) {
-  if (battito === 0) return accordo.basso;
-  if (battito === 3) {
-    const su = grana(battuta, 7) < 0.5 ? -1 : 1;     // mezzo tono sotto o sopra
-    return prossimo.basso * Math.pow(2, su / 12);
-  }
-  const scelte = [accordo.toni[1], accordo.toni[2], accordo.toni[3], accordo.toni[2] / 2];
-  return scelte[Math.floor(grana(battuta, battito) * scelte.length) % scelte.length];
-}
-
 function suonaPasso(n, quando, cfg, unita) {
-  const battuta = Math.floor(n / 12) % FORMA.length;
-  const dentro = n % 12;
-  const battito = Math.floor(dentro / 3);
-  const u = dentro % 3;
-  const accordo = FORMA[battuta];
-  const prossimo = FORMA[(battuta + 1) % FORMA.length];
+  const battuta = Math.floor(n / 8) % FORMA.length;
+  const s = n % 8;
+  const giro = Math.floor(n / 64) % 2;
+  const acc = FORMA[battuta];
 
-  // Il basso sui quattro tempi, come deve: se manca il basso non è swing.
-  if (cfg.basso > 0 && u === 0) {
-    basso(passoBasso(battuta, battito, accordo, prossimo), quando, unita * 2.6, 0.3 * cfg.basso);
+  if (cfg.basso > 0) {
+    if (s === 0) basso(hz(acc.r), quando, unita * 3, 0.3 * cfg.basso);
+    else if (s === 4) basso(hz(acc.r + 7), quando, unita * 2.5, 0.24 * cfg.basso);
+    else if (s === 7 && grana(battuta, 3) > 0.55) basso(hz(FORMA[(battuta + 1) % FORMA.length].r), quando, unita * 1.2, 0.16 * cfg.basso);
   }
-
-  // Il ride: colpo sul tempo e colpo sulla semicroma ritardata, con gli
-  // accenti sui quattro tempi forti della battuta — 1, il "&" di 2, 3, il "&"
-  // di 4. Il secondo colpo arriva al terzo del tempo, non a metà: è quello
-  // che distingue lo swing dal terzine.
-  if (cfg.ride > 0 && (u === 0 || u === 2)) {
-    const accento = (u === 0 && battito % 2 === 0) || (u === 2 && battito % 2 === 1);
-    ride(quando, (accento ? 0.1 : 0.055) * cfg.ride);
+  if (cfg.shaker > 0) soffio(quando, 0.05, (s % 2 ? 0.03 : 0.05) * cfg.shaker, 6500, 9500, 'highpass', busMusica);
+  if (cfg.tick > 0 && (s === 2 || s === 6)) tono('triangle', 1650, quando, 0.035, 0.06 * cfg.tick, 0, busMusica);
+  if (cfg.comping > 0 && (s === 3 || s === 7 || (s === 0 && grana(battuta, 5) > 0.6))) {
+    pluck(acc.ch, quando, (s === 0 ? 0.035 : 0.055) * cfg.comping);
   }
-
-  // Le spazzole: due e quattro, con il fiato dell'attimo prima.
-  if (cfg.spazzole > 0 && u === 0 && (battito === 1 || battito === 3)) {
-    soffio(quando - 0.07, 0.05, 0.02 * cfg.spazzole, 1400, 4200, 'bandpass', busMusica);
-    soffio(quando, 0.16, 0.07 * cfg.spazzole, 1900, 5200, 'bandpass', busMusica);
-  }
-
-  // Il pianoforte: due accordi corti, sul rinvio di due e di quattro, e ogni
-  // tanto uno in più, come fa chi suona e non sta a contare.
-  if (cfg.comping > 0 && u === 2 && (battito === 1 || battito === 3)) {
-    accordoPiano(accordo.toni, quando, unita * 2.2, 0.07 * cfg.comping);
-  } else if (cfg.comping > 0 && u === 0 && grana(battuta, 5) > 0.72) {
-    accordoPiano(accordo.toni, quando, unita * 1.6, 0.045 * cfg.comping);
-  }
-
-  // L'organo: il letto sotto tutto, bassissimo, e solo se non si è ristretti.
-  if (cfg.coda > 0 && u === 0 && battito === 0) {
-    organo(accordo.toni, quando, unita * 11, 0.016 * cfg.coda);
-  }
-
-  // Il tema, quando c'è. Silenzio nei correnti: il blues è anche fermarsi.
+  if (cfg.pad > 0 && s === 0) pad(acc.ch, quando, unita * 8, 0.022 * cfg.pad);
   if (cfg.melodia > 0) {
-    const frase = FRASI[battuta];
-    if (frase) {
-      for (const [a, semi, lunga] of frase) {
-        if (a === u) corno(semitoni(semi), quando, unita * lunga * 1.7, 0.085 * cfg.melodia);
-      }
+    for (const [a, semi, lung] of TEMA[battuta]) {
+      if (a !== s) continue;
+      campanella(mel(semi), quando, unita * lung * 1.3, 0.11 * cfg.melodia);
+      if (giro) campanella(mel(semi), quando + unita * 1.5, unita * lung, 0.035 * cfg.melodia);
     }
   }
 }
@@ -413,83 +372,37 @@ function basso(freq, quando, dur, quanto) {
   o.start(quando);
   o.stop(quando + dur + 0.05);
 }
-// Il ride è rumore altissimo più due parziali: senza un campione è tutto quello
-// che si può fare, e basta se è piccolo e sta in alto.
-function ride(quando, quanto) {
-  soffio(quando, 0.14, quanto, 7000, 11000, 'highpass', busMusica);
-  tono('sine', 3180, quando, 0.04, quanto * 0.5, 0, busMusica);
-  tono('sine', 4720, quando, 0.03, quanto * 0.35, 0, busMusica);
+// Una chitarrina: le tre note dell'accordo, appena sfalsate come una strimpellata.
+function pluck(toni, quando, quanto) {
+  toni.forEach((st, i) => {
+    const t = quando + i * 0.014, f = hz(st);
+    tono('triangle', f, t, 0.22, quanto * (1 - i * 0.12), 0, busMusica);
+    tono('sine', f * 2, t, 0.12, quanto * 0.3, 0, busMusica);
+  });
 }
-// Due corde stonate e brevi, come dita sul vetro di un bicchiere.
-function accordoPiano(toni, quando, dur, quanto) {
-  for (let i = 0; i < 3; i++) {
-    for (const det of [-7, 7]) {
-      const o = ctx.createOscillator();
-      o.type = 'sawtooth';
-      o.frequency.setValueAtTime(toni[i], quando);
-      o.detune.setValueAtTime(det, quando);
-      const lp = ctx.createBiquadFilter();
-      lp.type = 'lowpass';
-      lp.frequency.setValueAtTime(2400, quando);
-      lp.frequency.exponentialRampToValueAtTime(900, quando + dur);
-      o.connect(lp);
-      lp.connect(inv(quando, quanto * (1 - i * 0.18), 0.01, dur, busMusica));
-      o.start(quando);
-      o.stop(quando + dur + 0.06);
-    }
-  }
+// Il carillon: una nota pura con due armonici che si spengono in fretta.
+function campanella(f, quando, dur, quanto) {
+  tono('sine', f, quando, Math.max(0.3, dur), quanto, 0, busMusica);
+  tono('sine', f * 2, quando, Math.max(0.16, dur * 0.55), quanto * 0.35, 0, busMusica);
+  tono('sine', f * 3.01, quando, 0.12, quanto * 0.12, 3, busMusica);
+  tono('triangle', f * 4.02, quando, 0.06, quanto * 0.08, 0, busMusica);
 }
-// L'organo: due toni lunghi con un tremolo lento, il tappeto sotto la banda.
-function organo(toni, quando, dur, quanto) {
-  for (const f of [toni[0], toni[2]]) {
+// Il pad: le note dell'accordo un'ottava sotto, entrano piano e se ne vanno piano.
+function pad(toni, quando, dur, quanto) {
+  for (const st of toni) {
     const o = ctx.createOscillator();
-    o.type = 'sawtooth';
-    o.frequency.setValueAtTime(f, quando);
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass';
-    lp.frequency.value = 1100;
-    const lfo = ctx.createOscillator();
-    lfo.frequency.value = 5.2;
-    const lfoG = ctx.createGain();
-    lfoG.gain.value = quanto * 0.35;
-    const g = inv(quando, quanto, 0.09, dur, busMusica);
-    lfo.connect(lfoG);
-    lfoG.connect(g.gain);
-    o.connect(lp);
-    lp.connect(g);
-    o.start(quando); lfo.start(quando);
-    o.stop(quando + dur + 0.1); lfo.stop(quando + dur + 0.1);
-  }
-}
-// Il corno: due seghe, una banda stretta attorno al corpo, e il vibrato che
-// arriva un attimo dopo l'attacco, come fa un fiato vero.
-function corno(freq, quando, dur, quanto) {
-  const g = inv(quando, quanto, 0.05, dur, busMusica);
-  const bp = ctx.createBiquadFilter();
-  bp.type = 'bandpass';
-  bp.frequency.setValueAtTime(760, quando);
-  bp.Q.value = 1.4;
-  bp.connect(g);
-  const lfo = ctx.createOscillator();
-  lfo.frequency.setValueAtTime(5.4, quando);
-  const lfoG = ctx.createGain();
-  lfoG.gain.setValueAtTime(0, quando);
-  lfoG.gain.setValueAtTime(4.5, quando + Math.min(0.22, dur * 0.4));
-  lfo.connect(lfoG);
-  for (const det of [-5, 5]) {
-    const o = ctx.createOscillator();
-    o.type = 'sawtooth';
-    o.frequency.setValueAtTime(freq, quando);
-    o.detune.setValueAtTime(det, quando);
-    lfoG.connect(o.detune);
-    o.connect(bp);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(hz(st - 12), quando);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, quando);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, quanto), quando + dur * 0.35);
+    g.gain.exponentialRampToValueAtTime(0.0001, quando + dur);
+    o.connect(g);
+    g.connect(busMusica);
     o.start(quando);
-    o.stop(quando + dur + 0.08);
+    o.stop(quando + dur + 0.05);
   }
-  lfo.start(quando);
-  lfo.stop(quando + dur + 0.08);
 }
-
 
 /* ---------- manopole ---------- */
 function metti(which, acceso) {
@@ -522,7 +435,7 @@ return {
 
 </script>
 <script>
-const W=360,H=560,R=18,RH=R*1.732,COLS=10,LIM=12,SX=W/2,SY=H-40,TAU=Math.PI*2,FONT='"Caveat Brush","Comic Sans MS",cursive';
+const W=360,H=560,R=18,RH=R*1.732,COLS=10,LIM=12,SX=W/2,SY=H-40,TAU=Math.PI*2,FONT='"Noto Serif Display","Playfair Display",Georgia,serif';
 const COL=['#B8243A','#F5EBAA','#CDE8F0','#B07AD0','#F3AA45'],NAMES=['Rosso','Bianco','Gin tonic','Lambrusco','Ambra'];
 const LQ=[['#B8243A','#4E0B18'],['#F5EBAA','#CDBB5C'],['rgba(205,238,248,.26)','rgba(120,190,215,.5)'],['#B884D8','#5A2680'],['#F3AA45','#B5601A']],NF=[0,2,8,7,0];
 const mix=(h,t,a)=>{const n=x=>parseInt(h.slice(x,x+2),16),m=t==='w'?255:0;return'#'+[1,3,5].map(i=>Math.round(n(i)+(m-n(i))*a).toString(16).padStart(2,'0')).join('')};
@@ -560,7 +473,7 @@ for(let i=0;i<28;i++){const a=Math.random()*TAU,sp=80+Math.random()*170;P({t:'dr
 P(txt('Vendemmia!',W/2,H/2-40,46,'#F2B84B'));
 setTimeout(()=>{if(state!=='clear')return;ov.hidden=false;ov.innerHTML=`<div class="label"><h2>Livello ${level} superato</h2><div class="big">+${bonus}</div><p>Il prossimo è più difficile.</p><button id="nx">Livello ${level+1}</button></div>`;document.getElementById('nx').onclick=()=>{level++;beginLevel()}},1100)}
 function bump(x,y,dx,dy,pow,radial){each((b,r,c)=>{const ex=px(r,c)-x,ey=py(r)-y,d=Math.hypot(ex,ey),f=Math.max(0,1-d/(R*5));if(f<=0)return;
-let ux=dx,uy=dy;if(radial){if(d<1)return;ux=ex/d;uy=ey/d}b.vx+=ux*pow*f;b.vy+=uy*pow*f;b.wa=Math.min(.4,b.wa+.3*f);b.ax=Math.atan2(uy,ux);b.wt=0})}
+let ux=dx,uy=dy;if(radial){if(d<1)return;ux=ex/d;uy=ey/d}b.vx+=ux*pow*f;b.vy+=uy*pow*f;b.wa=Math.min(.4,b.wa+.3*f);b.ax=Math.atan2(uy,ux);b.wt=0;const q=b.L;q.sv+=ux*f*pow*.016;q.hv-=uy*f*pow*.006;for(let i=0;i<7;i++)q.wv[i]+=Math.sin(i*1.9+b.ph)*f*pow*.016})}
 function phys(dt){const s=Math.min(dt,.033);
 each((b,r,c)=>{let sx=0,sy=0,n=0;for(const[y,x]of nb(r,c)){const q=grid[y][x];if(q){sx+=q.ox;sy+=q.oy;n++}}
 const ax=-170*b.ox-9*b.vx+(n?55*(sx/n-b.ox):0)+Math.sin(T*1.7+b.ph)*7,ay=-170*b.oy-9*b.vy+(n?55*(sy/n-b.oy):0)+Math.cos(T*1.3+b.ph)*5;
@@ -597,15 +510,15 @@ if(shot.y<=R||hit())return land()}
 P({t:'trail',x:shot.x,y:shot.y,k:shot.k,life:.3,max:.3,vx:0,vy:0})}
 function shoot(){if(state!=='aim')return;shot={x:SX,y:SY,vx:Math.cos(ang)*14,vy:Math.sin(ang)*14,k:cur,wa:0,wt:0,ax:0,L:newL()};state='fly';spinV=9;snd('tiro')}
 function newL(){return{sl:0,sv:0,hy:0,hv:0,w:Array(7).fill(0),wv:Array(7).fill(0),px:0,py:0,ph:Math.random()*6}}
-function liquid(L,vx,vy,s){const c=v=>Math.max(-400,Math.min(400,v)),dx=c(vx-L.px),dy=c(vy-L.py);L.px=vx;L.py=vy;
-L.sv+=(-85*L.sl-3*L.sv)*s+dx*.03+Math.sin(T*1.6+L.ph)*6*s;L.sl=Math.max(-1.2,Math.min(1.2,L.sl+L.sv*s));
-L.hv+=(-120*L.hy-3.5*L.hv)*s-dy*.012;L.hy=Math.max(-.4,Math.min(.4,L.hy+L.hv*s));
-for(let i=0;i<7;i++){const a=L.w[i?i-1:0],b=L.w[i<6?i+1:6];L.wv[i]+=(-70*L.w[i]-1.8*L.wv[i]+60*(a+b-2*L.w[i]))*s+dx*.012*(i-3)/3+dy*.009*(i%2?1:-1)+Math.sin(T*2.6+L.ph+i*.9)*3*s}
-for(let i=0;i<7;i++)L.w[i]=Math.max(-.5,Math.min(.5,L.w[i]+L.wv[i]*s))}
+function liquid(L,vx,vy,s){const c=v=>Math.max(-450,Math.min(450,v)),dx=c(vx-L.px),dy=c(vy-L.py);L.px=vx;L.py=vy;
+L.sv+=(-85*L.sl-2.6*L.sv)*s+dx*.05+Math.sin(T*1.6+L.ph)*7*s;L.sl=Math.max(-1.3,Math.min(1.3,L.sl+L.sv*s));
+L.hv+=(-110*L.hy-3*L.hv)*s-dy*.018;L.hy=Math.max(-.45,Math.min(.45,L.hy+L.hv*s));
+for(let i=0;i<7;i++){const a=L.w[i?i-1:0],b=L.w[i<6?i+1:6];L.wv[i]+=(-70*L.w[i]-1.6*L.wv[i]+60*(a+b-2*L.w[i]))*s+dx*.02*(i-3)/3+dy*.016*(i%2?1:-1)+Math.sin(T*2.6+L.ph+i*.9)*4*s}
+for(let i=0;i<7;i++)L.w[i]=Math.max(-.55,Math.min(.55,L.w[i]+L.wv[i]*s))}
 function bub(g,x,y,k,rad=R,s=1,ax=0,al=1,L=null,ph=0){g.save();g.globalAlpha=al;const r=rad-1,lv0=-.18*r,E=()=>{g.beginPath();g.ellipse(x,y,r*s,r/s,ax,0,TAU)};
 E();g.fillStyle='rgba(235,245,240,.1)';g.fill();
 g.save();g.clip();g.translate(x,y);g.rotate(L?L.sl:0);
-const lv=lv0+(L?L.hy*r*.9:0),xs=-r*1.3,dx=r*2.6/6,pts=[];for(let i=0;i<7;i++)pts.push([xs+i*dx,lv+(L?L.w[i]*r*1.0:0)]);
+const lv=lv0+(L?L.hy*r*1.0:0),xs=-r*1.3,dx=r*2.6/6,pts=[];for(let i=0;i<7;i++)pts.push([xs+i*dx,lv+(L?L.w[i]*r*1.1:0)]);
 const top=()=>{g.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<6;i++)g.quadraticCurveTo(pts[i][0],pts[i][1],(pts[i][0]+pts[i+1][0])/2,(pts[i][1]+pts[i+1][1])/2);g.lineTo(pts[6][0],pts[6][1])};
 const gl=g.createLinearGradient(0,lv0,0,r);gl.addColorStop(0,LQ[k][0]);gl.addColorStop(1,LQ[k][1]);
 g.beginPath();top();g.lineTo(xs+r*2.6,r*2);g.lineTo(xs,r*2);g.closePath();g.fillStyle=gl;g.fill();
@@ -643,7 +556,7 @@ else if(p.t==='fizz'){ctx.globalAlpha=k;ctx.strokeStyle=COL[p.k];ctx.lineWidth=1
 else if(p.t==='trail'){ctx.globalAlpha=k*.35;ctx.fillStyle=COL[p.k];ctx.beginPath();ctx.arc(p.x,p.y,R*.8*k,0,TAU);ctx.fill();ctx.globalAlpha=1}
 else if(p.t==='ring'){ctx.globalAlpha=k;ctx.strokeStyle=p.col;ctx.lineWidth=3*k+.5;ctx.beginPath();ctx.arc(p.x,p.y,R*.6+(1-k)*R*2.4,0,TAU);ctx.stroke();ctx.globalAlpha=1}
 else if(p.t==='drop'){ctx.globalAlpha=k;ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,2.5*k+.5,0,TAU);ctx.fill();ctx.globalAlpha=1}
-else if(p.t==='txt'){ctx.globalAlpha=Math.min(1,k*2);const sc=1+Math.max(0,k-.85)*4;ctx.font=`${p.sz*sc}px ${FONT}`;ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=5;ctx.strokeStyle='#14110F';ctx.fillStyle=p.col;ctx.strokeText(p.txt,p.x,p.y);ctx.fillText(p.txt,p.x,p.y);ctx.globalAlpha=1}
+else if(p.t==='txt'){ctx.globalAlpha=Math.min(1,k*2);const sc=1+Math.max(0,k-.85)*4,T2=p.txt.toUpperCase();ctx.save();ctx.translate(p.x,p.y);ctx.scale(.66,1);ctx.font=`700 ${p.sz*1.15*sc}px ${FONT}`;ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=6;ctx.strokeStyle='#14110F';ctx.fillStyle=p.col;ctx.strokeText(T2,0,0);ctx.fillText(T2,0,0);ctx.restore();ctx.globalAlpha=1}
 else bub(ctx,p.x,p.y,p.k,R,1+p.wa*Math.cos(p.wt),p.ax,Math.min(1,p.life/.5),p.L)}
 gear(SX,SY,ang*3+spin);
 ctx.save();ctx.translate(SX,SY);ctx.rotate(ang);ctx.fillStyle='#F1EBDD';ctx.beginPath();ctx.moveTo(44,0);ctx.lineTo(35,-6);ctx.lineTo(35,6);ctx.closePath();ctx.fill();ctx.restore();
@@ -667,21 +580,20 @@ function pt(e){const b=cv.getBoundingClientRect(),x=(e.clientX-b.left)*W/b.width
 cv.addEventListener('pointerdown',e=>{aiming=true;cv.setPointerCapture(e.pointerId);pt(e)});
 cv.addEventListener('pointermove',e=>{if(aiming||e.pointerType==='mouse')pt(e)});
 cv.addEventListener('pointerup',e=>{if(aiming){pt(e);aiming=false;shoot()}});
-const KEY='vdb-classifica',day=()=>new Date().toISOString().slice(0,10);
-function lb(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
-function listHTML(){const t=lb().filter(e=>e.d===day()).sort((a,b)=>b.s-a.s).slice(0,5);return t.length?'<ol>'+t.map(e=>`<li><span>${e.n}</span><span class="muted">liv. ${e.l||1}</span><b>${e.s}</b></li>`).join('')+'</ol>':'<p class="muted">Nessun punteggio oggi. Il primo posto è libero.</p>'}
+const KEY='vdb-classifica',day=()=>new Date().toLocaleDateString('sv-SE');let mem=[];
+function lb(){try{const v=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(v))return v}catch(e){}return mem}
+function boardHTML(){const t=lb().filter(e=>e.d===day()).sort((a,b)=>b.s-a.s).slice(0,5);return t.length?'<h3>Classifica di oggi</h3><ol>'+t.map(e=>`<li><span>${e.n}</span><span class="muted">liv. ${e.l||1}</span><b>${e.s}</b></li>`).join('')+'</ol>':''}
 function legend(){ov.querySelectorAll('canvas.lg').forEach((c,i)=>{c.width=c.height=44;bub(c.getContext('2d'),22,22,i,21)})}
-function showStart(){state='idle';level=1;initGrid(5,5);mus('cantina');ov.hidden=false;ov.innerHTML=`<div class="label"><h2>Vineria della Bovisa</h2><p>Il gioco dei brindisi</p>
+function showStart(){state='idle';level=1;score=dsc=0;shot=null;parts=[];initGrid(5,5);mus('cantina');ov.hidden=false;ov.innerHTML=`<div class="label"><h2>Vineria della Bovisa</h2><p>Il gioco dei brindisi</p>
 <div class="lg-row">${NAMES.map(n=>`<figure><canvas class="lg"></canvas>${n}</figure>`).join('')}</div>
 <p>Trascina per mirare, rilascia per sparare. Unisci tre o più drink uguali e svuota la lavagna. Se sbagli troppo il soffitto scende: guarda i puntini in basso a destra.</p><p class="muted">Nessun limite di tempo. Ogni livello è più difficile.</p>
-<p class="muted">Il miglior punteggio della settimana vince un calice.</p><button id="go">Inizia la partita</button>
-<h3>Classifica di oggi</h3>${listHTML()}</div>`;legend();document.getElementById('go').onclick=start}
+<button id="go">Inizia la partita</button>
+${boardHTML()}</div>`;legend();document.getElementById('go').onclick=start}
 function end(){if(state==='over')return;state='over';snd('perso');mus('cantina');shot=null;ov.hidden=false;
 ov.innerHTML=`<div class="label"><h2>Fine partita</h2><div class="big">${score}</div><p>punti, livello ${level}</p><p>Le tue iniziali</p><input id="ini" maxlength="3" autocomplete="off" aria-label="Iniziali"><br><button id="sv">Salva il punteggio</button></div>`;
-document.getElementById('sv').onclick=()=>{const n=(document.getElementById('ini').value.replace(/[^A-Za-z]/g,'').toUpperCase()||'---').slice(0,3),a=lb();a.push({n,s:score,l:level,d:day()});try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}
-const w=new Date().toLocaleString('it-IT',{dateStyle:'short',timeStyle:'short'});
-ov.innerHTML=`<div class="label"><h2>Salute, ${n}!</h2><div class="proof"><b>${score} punti, livello ${level}</b><br><span class="muted">${w}</span><br><span class="muted">Mostra questa schermata al banco</span></div><h3>Classifica di oggi</h3>${listHTML()}<button id="again">Gioca ancora</button></div>`;
-document.getElementById('again').onclick=showStart}}
+const sv=()=>{const n=(document.getElementById('ini').value.replace(/[^A-Za-z]/g,'').toUpperCase()||'---').slice(0,3),a=lb().slice();a.push({n,s:score,l:level,d:day()});mem=a;try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}showStart()};
+document.getElementById('sv').onclick=sv;const ini=document.getElementById('ini');ini.addEventListener('input',()=>{ini.value=ini.value.replace(/[^A-Za-z]/g,'')});ini.addEventListener('keydown',e=>{if(e.key==='Enter')sv()})}
+try{document.fonts.load('700 20px "Noto Serif Display"')}catch(e){}
 let want='cantina',sent=null,unlocked=false,danger=false,prefs={m:true,f:true};
 try{Object.assign(prefs,JSON.parse(localStorage.getItem('vdb-audio')||'{}'))}catch(e){}
 const snd=(n,a)=>{try{A.suona(n,a)}catch(e){}};
@@ -696,6 +608,9 @@ bf.onclick=()=>{unlock();prefs.f=!prefs.f;saveP();paint();try{A.metti('effetti',
 paint();
 document.addEventListener('visibilitychange',()=>{if(!unlocked)return;if(document.hidden){try{A.silenzio()}catch(e){}sent=null}else mus(want)});
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.label button'))snd('ui')});
+const h1=document.querySelector('.hud h1');
+function fit(){h1.style.fontSize='';let f=parseFloat(getComputedStyle(h1).fontSize);while(h1.scrollWidth>h1.clientWidth&&f>12){f-=1;h1.style.fontSize=f+'px'}}
+fit();addEventListener('resize',fit);try{document.fonts.ready.then(fit)}catch(e){}
 showStart();requestAnimationFrame(loop);
 </script>
 </body>
